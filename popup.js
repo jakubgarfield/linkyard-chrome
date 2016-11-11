@@ -9,6 +9,7 @@ $(function() {
   var $linkSubmissionUrl = $('#link-submission-url');
   var $linkSubmissionTitle = $('#link-submission-title');
   var $linkSubmissionContent = $('#link-submission-content');
+  var $linkSubmissionDescription = $('#link-submission-description');
   var $linkSubmissionTags = $('#link-submission-tags');
   var $linkSubmissionDigest = $('#link-submission-digest');
   var $submitForm = $('form#submit');
@@ -53,14 +54,23 @@ $(function() {
 
         var linkSubmission = data.link_submission;
         $linkSubmissionUrl.val(linkSubmission.url).removeAttr('disabled');
-        $linkSubmissionTitle.val(linkSubmission.title).removeAttr('disabled');
+        $linkSubmissionTitle.val(linkSubmission.title.trim()).removeAttr('disabled');
         $linkSubmissionContent.val(linkSubmission.content).removeAttr('disabled');
         $submitButton.val('Add').removeAttr('disabled');
+
+        chrome.tabs.getSelected(null, function(tab) {
+          chrome.tabs.sendMessage(tab.id, {action: "getSelectedText"}, function(response) {
+            if (response.selectedText !== undefined) {
+              $linkSubmissionDescription.val(response.selectedText);
+            }
+          });
+        });
 
         $.each(linkSubmission.link_interactions, function(index, interaction) {
           var id = interaction.id;
           html = '<label for="interaction-' + id
-            + '"> <input type="checkbox" id="interaction-' + id
+            + '"> <input type="checkbox" ' + (interaction.name == "Buffer" ? "checked " : "")
+            + 'id="interaction-' + id
             + '" name="link_interactions_' + id
             + '" />' + interaction.name + '</label>';
           $('#link-submission-interactions').append(html);
