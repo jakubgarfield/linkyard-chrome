@@ -1,4 +1,4 @@
-BASE_URL = 'http://programmingdigest.net';
+BASE_URL = 'https://programmingdigest.net';
 API_URL = BASE_URL + '/api';
 
 // TODO: remember and use token in case we switch away from cookie-based
