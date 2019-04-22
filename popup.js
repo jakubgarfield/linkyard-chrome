@@ -10,6 +10,7 @@ $(function() {
   var $linkSubmissionTitle = $('#link-submission-title');
   var $linkSubmissionContent = $('#link-submission-content');
   var $linkSubmissionDescription = $('#link-submission-description');
+  var $linkSubmissionTwitter = $('#link-submission-twitter');
   var $linkSubmissionTags = $('#link-submission-tags');
   var $linkSubmissionDigest = $('#link-submission-digest');
   var $submitForm = $('form#submit');
@@ -62,6 +63,11 @@ $(function() {
           chrome.tabs.sendMessage(tab.id, {action: "getSelectedText"}, function(response) {
             if (response.selectedText !== undefined) {
               $linkSubmissionDescription.val(response.selectedText);
+            }
+          });
+          chrome.tabs.sendMessage(tab.id, {action: "getTwitterUsernames"}, function(response) {
+            if (response.usernames !== undefined) {
+              $linkSubmissionTwitter.val(response.usernames.join(" "));
             }
           });
         });
